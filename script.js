@@ -87,7 +87,9 @@ function initDoughButtons() {
     var div = document.querySelector("#doughbuttons");
     for (let i = 0; i < maxDough; i++) {
         var doughButton = document.createElement("button");
-        doughButton.onclick = `setDough(${i})`;
+        // doughButton.onclick = `setDough(${i})`;
+        doughButton.addEventListener("click", setDough);
+        doughButton.doughNumber = i;
         doughButton.innerHTML = `Dough ${i + 1}`;
         doughButton.setAttribute("class", "doughbutton");
         div.appendChild(doughButton);
@@ -331,11 +333,15 @@ function calcAll() {
     }
 }
 
-function setDough(idx) {
-    currentDoughIdx = idx;
+function setDough() {
+    currentDoughIdx = this.doughNumber;
+
+    document.querySelectorAll(".doughbutton").forEach((e) => {
+        e.classList.remove("doughcurrent");
+    });
+    this.classList.add("doughcurrent");
 
     for (key in elems) {
-        //  doughs[currentDoughIdx][donutName]
         elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
     }
 

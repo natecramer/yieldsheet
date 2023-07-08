@@ -60,6 +60,10 @@ body, h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.2s;
 }
 
+.doughcurrent {
+    background-color: white;
+}
+
 .doughbutton:hover {
     background-color:khaki;
     /* color: lightcoral; */
