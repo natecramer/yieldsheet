@@ -199,7 +199,7 @@ function makeSheetHtml() {
 
         input = document.createElement("input");
         input.value = 0;
-        input.type = "text";
+        input.type = "number";
         input.resultDiv = resultDiv;
         input.donut = o;
         input.per_screen = o.per_screen;
