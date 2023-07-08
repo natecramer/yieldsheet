@@ -92,6 +92,9 @@ function initDoughButtons() {
         doughButton.doughNumber = i;
         doughButton.innerHTML = `Dough ${i + 1}`;
         doughButton.setAttribute("class", "doughbutton");
+        if (i === 0) {
+            doughButton.classList.add("doughcurrent");
+        }
         div.appendChild(doughButton);
     }
 }
