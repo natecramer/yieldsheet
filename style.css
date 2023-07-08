@@ -1,0 +1,77 @@
+body, h1, h2, h3, h4, h5, h6 {
+    font-family: cursive;
+}
+
+#page {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 80%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: bisque;
+    align-items: center;
+}
+
+#main-sheet {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    background-color: aquamarine;
+    padding-left: 1em;
+    border-bottom: 1px solid black;
+}
+
+.sheet-header {
+    /* background-color:; */
+    border-bottom: 1px;
+    border-color: black;
+    font-weight: bolder;
+}
+
+.screen-input {
+    width: auto;
+}
+
+#doughbuttonscont {
+    display: flex;
+    flex: initial;
+    justify-content: center;
+    width: 100%;
+    /* background-color: aqua; */
+    padding-bottom: 1em;
+}
+
+#doughbuttons {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    width: 80%;
+    gap: 1em;
+}
+
+.doughbutton {
+    background-color: lightcoral;
+    border: none;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    transition-duration: 0.2s;
+}
+
+.doughbutton:hover {
+    background-color:khaki;
+    /* color: lightcoral; */
+}
+
+.doughbutton:active {
+    background-color: white;
+    /* color: lightcoral; */
+}
+
+.total-cont {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
