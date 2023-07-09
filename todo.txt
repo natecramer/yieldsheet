@@ -3,6 +3,9 @@
 * multidough
 * ui / ux
 * total for the day
+* localStorage data versioning and checking for valid data
+
+- code cleanup
 
 - fritter weights
 

@@ -1,8 +1,12 @@
 // glob vars
 const sheetDiv = document.querySelector("#main-sheet")
 
+var doughs = [];
+
 var currentDoughIdx = 0;
 const maxDough = 3; // note: starts at 1, the index for the doughs array would be this - 1
+
+var data = {};
 
 const donuts = {
     LongJohns : {
@@ -64,30 +68,102 @@ const donuts = {
     Texas : {} // skipped during loops, do it manually. Just put the entry here so it shows up as a donut name
 };
 
-var doughs = [];
 function initDoughs() {
     doughs = JSON.parse(localStorage.getItem("doughs"));
-    if (doughs != undefined)  {
-        console.log("Local storage of doughs WAS found");
+    if (doughs != undefined && doughs.length == maxDough)  {
+        //console.log("Local storage of doughs WAS found");
         updateSheetDisplay();
         calcAll();
         return;
     }
 
-    console.log("Local storage of doughs not found, initing");
+    //console.log("Local storage of doughs not found, initing");
 
     makeBlankDoughs();
 }
+function makeSingleBlankDough(idx) {
+    doughs[idx] = {};
+    for (property in donuts) {
+        doughs[idx][property] = {
+            inputStr: "0", 
+            donutCount: 0};
+    }
+}
 function makeBlankDoughs() {
     doughs = [];
-    for (let i = 0; i < 3; i++) {
-        doughs[i] = {};
-        for (property in donuts) {
-            doughs[i][property] = {
-                inputStr: "0", 
-                donutCount: 0};
-        }
+    for (let i = 0; i < maxDough; i++) {
+        makeSingleBlankDough(i);
     }
+}
+
+function getDoughValue(doughIdx, donutName, field) {
+    if (doughIdx > doughs.length-1 || 
+        doughs[doughIdx].hasOwnProperty("donutName") === null ||
+        doughs[doughIdx][donutName].hasOwnProperty("field") === null) {
+            var tries = 0;
+            top:
+            while (true) {
+                if (tries > 0) {
+                    //console.log(`getDoughValue: BIG FAILURE: tried to make blank doughs and still couldnt find thing: ${doughIdx}, ${donutName}, ${field}`);
+                    return null;
+                }
+                //console.log(`getDoughValue: failed to find requested thing: ${doughIdx}, ${donutName}, ${field}`);
+                //console.log(`getDoughValue: doughs: ${doughs}`);
+                //console.log(`getDoughValue: making blank doughs and trying again`);
+                makeBlankDoughs();
+                tries += 1;
+                continue top;
+            }
+    }
+
+    // entry was found; return it
+    return doughs[doughIdx][donutName][field];
+}
+
+function setDoughValue(doughIdx, donutName, field, value) {
+    if (doughIdx > doughs.length-1) {
+        //console.log(`setDoughValue: tried to write to an index out of bounds, making blank dough: idx: ${doughIdx}`);
+        makeSingleBlankDough(doughIdx);
+    }
+    if (!donutName in doughs[doughIdx]) {
+        //console.log(`setDoughValue: tried to write to a donutName that doesn't exist: ${donutName}`);
+    }
+    if (!field in doughs[doughIdx][donutName]) {
+        //console.log(`setDoughValue: tried to write to a field that doesn't exist: ${field}`);
+    }
+
+    return doughs[doughIdx][donutName][field] = value;
+}
+
+const currentDataVersion = 1;
+
+function makeAndSaveNewData() {
+    localStorage.removeItem("doughs");
+    localStorage.removeItem("data");
+    data = {};
+    data.version = 1;
+    makeBlankDoughs();
+    data.doughs = doughs;
+    localStorage.setItem("data", JSON.stringify(data));
+}
+
+function loadAndValidateData() {
+    var loaded = JSON.parse(localStorage.getItem("data"));
+    if (loaded === null ||
+        loaded.hasOwnProperty("version") === null ||
+        loaded.version != currentDataVersion) {
+            //console.log("loadAndValidateData: data not found or version was invalid, calling makeAndSaveNewData()");
+            makeAndSaveNewData();
+            return;
+    }
+    data = loaded;
+    doughs = loaded.doughs;
+    //console.log(`loadAndValidateData: data loaded (version ${data.version})`);
+}
+
+function saveData() {
+    localStorage.setItem("data", JSON.stringify(data));
+    loadAndValidateData();
 }
 
 var elems = {};
@@ -163,7 +239,6 @@ function onInputChange(e) {
 }
 
 function xupdate(inputElem) {
-
     str = new String(inputElem.value);
     screens = "0";
     plus = "0";
@@ -218,7 +293,7 @@ function xupdate(inputElem) {
         if (isNaN(screens)) {
             screens = 0;
             total_donuts = 0;
-            console.log("nan alert");
+            //console.log("nan alert");
         }
         total_donuts = screens * inputElem.donut.per_screen;
         // reformat string to correct garbage text
@@ -234,8 +309,10 @@ function xupdate(inputElem) {
         inputElem.resultDiv.innerHTML = `${result_screens} + ${result_plus}`;
     }
 
-    doughs[currentDoughIdx][inputElem.donutName]["donutCount"] = total_donuts;
-    doughs[currentDoughIdx][inputElem.donutName].inputStr = inputElem.value;
+    // doughs[currentDoughIdx][inputElem.donutName]["donutCount"] = total_donuts;
+    // doughs[currentDoughIdx][inputElem.donutName].inputStr = inputElem.value;
+    setDoughValue(currentDoughIdx, inputElem.donutName, "donutCount", total_donuts);
+    setDoughValue(currentDoughIdx, inputElem.donutName, "inputStr", inputElem.value);
 }
 
 function makeSheetHtml() {
@@ -378,7 +455,10 @@ function calcAll() {
     for (let i = 0; i < maxDough; i++) {
         var total = 0;
         for (k in doughs[i]) {
-            total += doughs[i][k]["donutCount"];
+            const count = getDoughValue(i, k, "donutCount");
+            if (count != null) {
+                total += count;
+            }
         }
         const div = document.querySelector(`#total-dough-${i+1}`);
         div.innerHTML = `${Math.floor(total / 12)}`;
@@ -390,7 +470,10 @@ function calcAll() {
     var totalForTheDay = 0;
     for (let i = 0; i < maxDough; i++) {
         for (k in doughs[i]) {
-            totalForTheDay += doughs[i][k].donutCount;
+            const count = getDoughValue(i, k, "donutCount");
+            if (count != null) {
+                totalForTheDay += count;
+            }
         }
     }
     document.querySelector("#total-for-the-day").innerHTML = `${Math.floor(totalForTheDay / 12)}`;
@@ -398,8 +481,8 @@ function calcAll() {
         document.querySelector("#total-for-the-day").innerHTML += ` + ${totalForTheDay % 12}`;
     }
 
-    localStorage.setItem("doughs", JSON.stringify(doughs));
-    // console.log(JSON.stringify(doughs));
+    saveData();
+    // //console.log(JSON.stringify(doughs));
     updateSheetDisplay();
 }
 
@@ -448,6 +531,8 @@ function setDough(idx) {
 
 function clearAll() {
     makeBlankDoughs();
+    localStorage.removeItem("data");
+    loadAndValidateData();
     setDough(0);
     updateSheetDisplay();
     calcAll();
@@ -455,8 +540,9 @@ function clearAll() {
 
 function run() {
     // data
+    loadAndValidateData();
     initDoughTotalsElems();
-    initDoughs();
+    // initDoughs();
     initElems();
 
     // html
