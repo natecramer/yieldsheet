@@ -1,7 +1,7 @@
 * texas
 * totals
 * multidough
-- ui / ux
+* ui / ux
 * total for the day
 
 - fritter weights
