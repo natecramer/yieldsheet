@@ -102,7 +102,7 @@ function initDoughButtons() {
     for (let i = 0; i < maxDough; i++) {
         var doughButton = document.createElement("button");
         // doughButton.onclick = `setDough(${i})`;
-        doughButton.addEventListener("click", setDough);
+        doughButton.addEventListener("click", onDoughButtonClicked);
         doughButton.doughNumber = i;
         doughButton.innerHTML = `Dough ${i + 1}`;
         doughButton.setAttribute("class", "doughbutton");
@@ -360,21 +360,34 @@ function updateSheetDisplay() {
     }
 }
 
-function setDough() {
+function onDoughButtonClicked() {
     currentDoughIdx = this.doughNumber;
+    setDough(currentDoughIdx);
 
-    document.querySelectorAll(".doughbutton").forEach((e) => {
+    // document.querySelectorAll(".doughbutton").forEach((e) => {
+    //     e.classList.remove("doughcurrent");
+    // });
+    // this.classList.add("doughcurrent");
+}
+
+function setDough(idx) {
+    currentDoughIdx = idx;
+    localStorage.setItem("currentDough", currentDoughIdx);
+
+    let buttons = document.querySelectorAll(".doughbutton");
+    // for (let i = 0; i < buttons.length; i++)
+    buttons.forEach((e) => {
         e.classList.remove("doughcurrent");
     });
-    this.classList.add("doughcurrent");
+    buttons[idx].classList.add("doughcurrent");
 
     updateSheetDisplay();
-
     calcAll();
 }
 
 function clearAll() {
     makeBlankDoughs();
+    setDough(0);
     updateSheetDisplay();
     calcAll();
 }
@@ -388,7 +401,13 @@ function run() {
     initDoughButtons();
     makeSheetHtml();
     makeTexasRowHtml();
-    updateSheetDisplay();
+    currentDoughIdx = localStorage.getItem('currentDough');
+    if (currentDoughIdx === null) {
+        currentDoughIdx = 0;
+    }
+    setDough(currentDoughIdx);
+    // updateSheetDisplay();
+    // calcAll();
 }
 
 run();
