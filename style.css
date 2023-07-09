@@ -68,7 +68,8 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
 
 .doughbutton:hover {
     background-color:khaki;
-    border: 1px solid bisque;
+    /* border: 1px solid bisque; */
+    border: 1px solid black;
 }
 
 .doughbutton:active {
