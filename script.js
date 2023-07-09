@@ -76,6 +76,43 @@ function initDoughs() {
     }
 }
 
+const DBOpenRequest = window.indexedDB.open('doughData', 4);
+
+DBOpenRequest.onerror = (event) => {
+    console.log("Error loading database.");
+}
+
+let db;
+
+DBOpenRequest.onsuccess = (event) => {
+    db = DBOpenRequest.result;
+    doDoughsData();
+};
+
+DBOpenRequest.onupgradeneeded = (event) => {
+    db = event.target.result;
+
+    // db.deleteObjectStore('doughData');
+
+    const objectStore = db.createObjectStore('doughData', {keyPath: 'xdough'});
+
+    objectStore.createIndex('doughs', 'doughs', {unique: false});
+};
+
+function doDoughsData() {
+    const objectStore = db.transaction('doughData').objectStore('doughData');
+    objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result;
+
+        if (!cursor) {
+            console.log("Done width doughData")
+            return;
+        }
+
+        console.log(cursor.value);
+    }
+}
+
 var elems = {};
 function initElems() {
     for (property in donuts) {
@@ -334,6 +371,11 @@ function calcAll() {
     if (totalForTheDay % 12 > 0) {
         document.querySelector("#total-for-the-day").innerHTML += ` + ${totalForTheDay % 12}`;
     }
+
+    const transaction = db.transaction(['doughData'], 'readwrite');
+    const objectStore = transaction.objectStore('doughData');
+    const xdoughs = {xdough: "x", "doughs": doughs};
+    const objectStoreRequest = objectStore.add(xdoughs);
 }
 
 function setDough() {
@@ -355,6 +397,7 @@ function run() {
     // data
     initDoughs();
     initElems();
+    // requestDoughs();
 
     // html
     initDoughButtons();
