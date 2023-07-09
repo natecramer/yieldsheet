@@ -1,5 +1,5 @@
-body, h1, h2, h3, h4, h5, h6 {
-    font-family: cursive;
+body, h1, h2, h3, h4, h5, h6, .doughbutton {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #page {
@@ -58,7 +58,6 @@ body, h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
     font-size: 24px;
     transition-duration: 0.2s;
-    font-family: cursive;
 }
 
 .doughcurrent {
