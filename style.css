@@ -22,6 +22,12 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     border-bottom: 1px solid black;
 }
 
+#main-sheet > div:nth-of-type(6n+1),
+#main-sheet > div:nth-of-type(6n+2),
+#main-sheet > div:nth-of-type(6n+3) {
+    background-color: rgb(236, 204, 162);
+}
+
 .sheet-header {
     /* background-color:; */
     border-bottom: 1px;
