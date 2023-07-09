@@ -113,6 +113,51 @@ function initDoughButtons() {
     }
 }
 
+function initDoughTotalsElems() {
+    let gridDiv = document.querySelector("#totals-grid");
+    for (let i = 0; i < maxDough; i++) {
+        let leftContDiv = document.createElement("div");
+        leftContDiv.setAttribute("class", "total-cont-left");
+        leftContDiv.innerHTML = `Dough ${i+1}`;
+
+        let rightContDiv = document.createElement("div");
+        rightContDiv.setAttribute("class", "total-cont-right");
+        let innerDiv = document.createElement("div");
+        innerDiv.setAttribute("id", `total-dough-${i+1}`);
+        innerDiv.innerHTML = "0";
+
+        if (i % 2 === 0) {
+            rightContDiv.setAttribute("class", "total-cont-right alt");
+            leftContDiv.setAttribute("class", "total-cont-left alt");
+        }
+
+        leftContDiv.doughNumber = i;
+        leftContDiv.addEventListener("click", onDoughButtonClicked);
+        rightContDiv.doughNumber = i;
+        rightContDiv.addEventListener("click", onDoughButtonClicked);
+        innerDiv.doughNumber = i;
+        innerDiv.addEventListener("click", onDoughButtonClicked);
+
+        gridDiv.appendChild(leftContDiv);
+        rightContDiv.appendChild(innerDiv);
+        gridDiv.appendChild(rightContDiv);
+    }
+
+    let leftContDiv = document.createElement("div");
+    leftContDiv.setAttribute("class", "total-cont-left total-day-cont");
+    leftContDiv.innerHTML = `<b>Total for the day:</b>`;
+
+    let rightContDiv = document.createElement("div");
+    rightContDiv.setAttribute("class", "total-cont-right total-day-cont");
+    let innerDiv = document.createElement("div");
+    innerDiv.setAttribute("id", `total-for-the-day`);
+    innerDiv.innerHTML = "0";
+
+    gridDiv.appendChild(leftContDiv);
+    rightContDiv.appendChild(innerDiv);
+    gridDiv.appendChild(rightContDiv);
+}
+
 function onInputChange(e) {
     calcAll();
 }
@@ -329,13 +374,17 @@ function calcAllRows() {
 
 function calcAll() {
     calcAllRows();
-    var total = 0;
-    for (k in doughs[currentDoughIdx]) {
-        total += doughs[currentDoughIdx][k]["donutCount"];
-    }
-    document.querySelector("#total").innerHTML = `${Math.floor(total / 12)}`;
-    if (total % 12 > 0) {
-        document.querySelector("#total").innerHTML += ` + ${total % 12}`
+    
+    for (let i = 0; i < maxDough; i++) {
+        var total = 0;
+        for (k in doughs[i]) {
+            total += doughs[i][k]["donutCount"];
+        }
+        const div = document.querySelector(`#total-dough-${i+1}`);
+        div.innerHTML = `${Math.floor(total / 12)}`;
+        if (total % 12 > 0) {
+            div.innerHTML += ` + ${total % 12}`
+        }
     }
 
     var totalForTheDay = 0;
@@ -381,6 +430,18 @@ function setDough(idx) {
     });
     buttons[idx].classList.add("doughcurrent");
 
+    let totalLeftConts = document.querySelectorAll(".total-cont-left");
+    let totalRightConts = document.querySelectorAll(".total-cont-right");
+    totalLeftConts.forEach((e) => {
+        e.classList.remove("doughcurrent")
+    });
+    totalRightConts.forEach((e) => {
+        e.classList.remove("doughcurrent")
+    });
+
+    totalLeftConts[idx].classList.add("doughcurrent");
+    totalRightConts[idx].classList.add("doughcurrent");
+
     updateSheetDisplay();
     calcAll();
 }
@@ -394,6 +455,7 @@ function clearAll() {
 
 function run() {
     // data
+    initDoughTotalsElems();
     initDoughs();
     initElems();
 
