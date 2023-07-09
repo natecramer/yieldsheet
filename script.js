@@ -66,6 +66,20 @@ const donuts = {
 
 var doughs = [];
 function initDoughs() {
+    doughs = JSON.parse(localStorage.getItem("doughs"));
+    if (doughs != undefined)  {
+        console.log("Local storage of doughs WAS found");
+        updateSheetDisplay();
+        calcAll();
+        return;
+    }
+
+    console.log("Local storage of doughs not found, initing");
+
+    makeBlankDoughs();
+}
+function makeBlankDoughs() {
+    doughs = [];
     for (let i = 0; i < 3; i++) {
         doughs[i] = {};
         for (property in donuts) {
@@ -73,43 +87,6 @@ function initDoughs() {
                 inputStr: "0", 
                 donutCount: 0};
         }
-    }
-}
-
-const DBOpenRequest = window.indexedDB.open('doughData', 4);
-
-DBOpenRequest.onerror = (event) => {
-    console.log("Error loading database.");
-}
-
-let db;
-
-DBOpenRequest.onsuccess = (event) => {
-    db = DBOpenRequest.result;
-    doDoughsData();
-};
-
-DBOpenRequest.onupgradeneeded = (event) => {
-    db = event.target.result;
-
-    // db.deleteObjectStore('doughData');
-
-    const objectStore = db.createObjectStore('doughData', {keyPath: 'xdough'});
-
-    objectStore.createIndex('doughs', 'doughs', {unique: false});
-};
-
-function doDoughsData() {
-    const objectStore = db.transaction('doughData').objectStore('doughData');
-    objectStore.openCursor().onsuccess = (event) => {
-        const cursor = event.target.result;
-
-        if (!cursor) {
-            console.log("Done width doughData")
-            return;
-        }
-
-        console.log(cursor.value);
     }
 }
 
@@ -372,10 +349,15 @@ function calcAll() {
         document.querySelector("#total-for-the-day").innerHTML += ` + ${totalForTheDay % 12}`;
     }
 
-    const transaction = db.transaction(['doughData'], 'readwrite');
-    const objectStore = transaction.objectStore('doughData');
-    const xdoughs = {xdough: "x", "doughs": doughs};
-    const objectStoreRequest = objectStore.add(xdoughs);
+    localStorage.setItem("doughs", JSON.stringify(doughs));
+    // console.log(JSON.stringify(doughs));
+    updateSheetDisplay();
+}
+
+function updateSheetDisplay() {
+    for (key in elems) {
+        elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
+    }
 }
 
 function setDough() {
@@ -386,10 +368,14 @@ function setDough() {
     });
     this.classList.add("doughcurrent");
 
-    for (key in elems) {
-        elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
-    }
+    updateSheetDisplay();
 
+    calcAll();
+}
+
+function clearAll() {
+    makeBlankDoughs();
+    updateSheetDisplay();
     calcAll();
 }
 
@@ -397,12 +383,12 @@ function run() {
     // data
     initDoughs();
     initElems();
-    // requestDoughs();
 
     // html
     initDoughButtons();
     makeSheetHtml();
     makeTexasRowHtml();
+    updateSheetDisplay();
 }
 
 run();
