@@ -84,16 +84,18 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     border: 1px solid bisque;
 }
 
-.total-cont {
+#totals-cont {
     display: flex;
+    /* flex-basis: max-content; */
+    width: 100%;
     justify-content: center;
-    gap: 10px;
+    /* gap: 10px; */
+    /* border: 1px solid blue; */
 }
 
 #totals-grid {
     display: grid;
-    grid-template-columns: 55% 45%;/*1.5fr 1fr;*/
-    width: auto;
+    grid-template-columns: 1.5fr 1fr;
     /* background-color: aqua; */
 }
 
@@ -140,4 +142,12 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
 
 .total-day-cont {
     margin-top: 10px;
+    font-weight: bold;
+    height: 900px;
+    justify-content: center;
+}
+
+#total-for-the-day {
+    justify-self: center;
+    align-self: center;
 }

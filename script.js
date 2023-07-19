@@ -221,7 +221,7 @@ function initDoughTotalsElems() {
 
     let leftContDiv = document.createElement("div");
     leftContDiv.setAttribute("class", "total-cont-left total-day-cont");
-    leftContDiv.innerHTML = `<b>Total for the day:</b>`;
+    leftContDiv.innerHTML = `Total for the day:`;
 
     let rightContDiv = document.createElement("div");
     rightContDiv.setAttribute("class", "total-cont-right total-day-cont");
