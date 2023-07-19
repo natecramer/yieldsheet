@@ -5,6 +5,7 @@
 * total for the day
 * localStorage data versioning and checking for valid data
 
+- set zeroes to blank on input fields
 - code cleanup
 
 - fritter weights
