@@ -10,7 +10,6 @@
     <script src="./script.js" defer></script>
 </head>
 <body style="margin: 0;">
-    <h1>Jeff's Donut Yield Sheet Calculator</h1>
     <div id="page">
         <br>
         <div id="doughbuttonscont">
@@ -33,13 +32,31 @@
             </div>
         </div>
         <br>
+        <div id="doughscrap-cont">
+            <div class="doughscrap-left">
+                <label for="doughscrap-start-input" id="doughscrap-start-input">Scrap started with:</label>
+            </div>
+            <div class="doughscrap-right">
+            <input type="number" value="0" name="doughscrap-start-input" id="doughscrap-start-input" class="doughscrap-input"> lb
+            </div>
+            <div class="doughscrap-left">
+            <label for="doughscrap-end-input" id="doughscrap-end-input">Scrap ended with:</label>
+            </div>
+            <div class="doughscrap-right">
+            <input type="number" value="0" name="doughscrap-end-input" id="doughscrap-end-input" class="doughscrap-input"> lb
+            </div>
+        </div>
         <button onclick="clearAll()">Clear All</button>
+
+        <br><br>
+
+
         <div id="submit-cont">
             <form action="/submit-form" method="post" id="submit-form">
-                <label for="baker-name">Baker:</label>
+                <label for="baker-name">Baker Name:</label>
                 <input type="text" name="baker-name" id="submit-baker">
                 <!-- <br> -->
-                <label for="store">Store:</label>
+                <label for="store">Location:</label>
                 <select name="store" id="submit-store">
                     <option value="dutchmans">St. Matthews</option>
                     <option value="jeffersonville">Jeffersonville, IN</option>
@@ -60,6 +77,8 @@
                 <input type="date" id="submit-date" name="date">
             </form>
             <button onclick="clearAll()">Submit</button>
+            <br>
+            <button onclick="test_saveDataToFile()">Save Data to File</button>
         </div>
     </div>
 </body>

@@ -11,3 +11,8 @@
 - fritter weights
 
 - accounts
+
+[submit button]
+- send to email / to a database that can be viewed
+- [+] button for adding doughs
+- starting and ending scrap fields, and how many dozens you should have got (maybe don't display this to the user?)

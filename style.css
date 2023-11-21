@@ -155,6 +155,28 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     align-self: center;
 }
 
+#doughscrap-cont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 50%;
+    padding: 1em;
+    gap: 4px;
+}
+
+.doughscrap-left {
+    justify-self: right;
+    align-self: right;
+}
+
+.doughscrap-right {
+    justify-self: left;
+    align-self: left;
+}
+
+.doughscrap-input {
+    width: 5em;
+}
+
 #submit-form {
     display: grid;
     grid-template-columns: 1fr 1fr;

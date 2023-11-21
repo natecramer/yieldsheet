@@ -145,6 +145,7 @@ function makeAndSaveNewData() {
     makeBlankDoughs();
     data.doughs = doughs;
     localStorage.setItem("data", JSON.stringify(data));
+
 }
 
 function loadAndValidateData() {
@@ -164,6 +165,17 @@ function loadAndValidateData() {
 function saveData() {
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();
+}
+
+function test_saveDataToFile() {
+    const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json' || 'download.json';
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 var elems = {};
