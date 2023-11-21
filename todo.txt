@@ -16,3 +16,4 @@
 - send to email / to a database that can be viewed
 - [+] button for adding doughs
 - starting and ending scrap fields, and how many dozens you should have got (maybe don't display this to the user?)
+- saving the submit fields like name, location, shift to the local storage thingy
