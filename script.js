@@ -556,6 +556,7 @@ function run() {
     setDough(currentDoughIdx);
     // updateSheetDisplay();
     // calcAll();
+    initSubmitStuff();
 }
 
 run();

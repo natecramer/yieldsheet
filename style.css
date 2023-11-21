@@ -154,3 +154,8 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     justify-self: center;
     align-self: center;
 }
+
+#submit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

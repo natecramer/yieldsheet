@@ -6,6 +6,7 @@
     <title>Yield Sheet</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="/icon.png">
+    <script src="./submit.js" defer></script>
     <script src="./script.js" defer></script>
 </head>
 <body style="margin: 0;">
@@ -32,7 +33,33 @@
         </div>
         <br>
         <button onclick="clearAll()">Clear All</button>
+        <div id="submit-cont">
+            <form action="/submit-form" method="post" id="submit-form">
+                <label for="baker-name">Baker:</label>
+                <input type="text" name="baker-name" id="submit-baker">
+                <!-- <br> -->
+                <label for="store">Store:</label>
+                <select name="store" id="submit-store">
+                    <option value="dutchmans">St. Matthews</option>
+                    <option value="jeffersonville">Jeffersonville, IN</option>
+                    <option value="hurstbourne">Hurstbourne Pkwy</option>
+                    <option value="paristown">Paristown</option>
+                    <option value="fern creek">Fern Creek</option>
+                    <option value="springhurst">Springhurst</option>
+                </select>
+                <!-- <br> -->
+                <label for="shift">Shift:</label>
+                <select name="shift" id="submit-shift">
+                    <option value="1st">1st Shift</option>
+                    <option value="2nd">2nd Shift</option>
+                    <option value="3rd">3rd Shift</option>
+                </select>
+                <!-- <br> -->
+                <label for="date">Date:</label>
+                <input type="date" id="submit-date" name="date">
+            </form>
+            <button onclick="clearAll()">Submit</button>
+        </div>
     </div>
-    hello
 </body>
 </html>
