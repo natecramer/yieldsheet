@@ -68,6 +68,18 @@ const donuts = {
     Texas : {} // skipped during loops, do it manually. Just put the entry here so it shows up as a donut name
 };
 
+const donut_dough_weights = {
+    LongJohns : 2.5,
+    Bismarks : 2.5,
+    Glazed : 3,
+    Twists : 2.5,
+    Honeymooners : 2.5,
+    Honeybuns : 2.5,
+    TigerTails : 2.5,
+    Fritters : 2.6,
+    Texas : 10
+}
+
 function initDoughs() {
     doughs = JSON.parse(localStorage.getItem("doughs"));
     if (doughs != undefined && doughs.length == maxDough)  {
@@ -246,8 +258,28 @@ function initDoughTotalsElems() {
     gridDiv.appendChild(rightContDiv);
 }
 
+function initDoughScrapElems() {
+    document.querySelector("#doughscrap-start-input").addEventListener("change", onInputChange, false);
+    document.querySelector("#doughscrap-end-input").addEventListener("change", onInputChange, false);
+}
+
 function onInputChange(e) {
     calcAll();
+}
+
+// see how many doughs are being done by going thru the elems and seeing if any are set
+function getCurrentNumberOfDoughsBeingDone() {
+    var result = 0;
+    for (let i = 0; i < doughs.length; i++) {
+        for (let [key, value] of Object.entries(doughs[i])) {
+            if (value.donutCount > 0) {
+                result += 1;
+                break;
+            }
+        };
+    }
+    console.log(doughs);
+    return result;
 }
 
 function xupdate(inputElem) {
@@ -325,6 +357,51 @@ function xupdate(inputElem) {
     // doughs[currentDoughIdx][inputElem.donutName].inputStr = inputElem.value;
     setDoughValue(currentDoughIdx, inputElem.donutName, "donutCount", total_donuts);
     setDoughValue(currentDoughIdx, inputElem.donutName, "inputStr", inputElem.value);
+
+    var num_doughs = getCurrentNumberOfDoughsBeingDone();
+
+    var start_scrap = Number(document.querySelector("#doughscrap-start-input").value);
+    var end_scrap = Number(document.querySelector("#doughscrap-end-input").value);
+
+    var donuts_per_lb_max = 6.4;
+    var donuts_per_lb_min = 5.92;
+    var lb_of_dough = num_doughs * 75;
+    lb_of_dough += start_scrap;
+    lb_of_dough -= end_scrap;
+
+    var expected_dozens = (lb_of_dough * donuts_per_lb_max) / 12;
+    var expected_dozens_min = (lb_of_dough * donuts_per_lb_min) / 12;
+    expected_dozens = Math.floor(expected_dozens);
+    expected_dozens_min = Math.floor(expected_dozens_min);
+    // expected_dozens += Math.round(((start_scrap * 6.4) - (end_scrap * 64)) / 12);
+
+    
+    document.querySelector("#expected-dozens").innerHTML = "Expected Dozens: " + String(expected_dozens_min) + " to " + String(expected_dozens);
+    if (getTotalForTheDay() / 12 < expected_dozens_min) {
+        var lost_sales = (getTotalForTheDay()-expected_dozens_min) * 2.5;
+        
+        document.querySelector("#expected-dozens").innerHTML += "<br>Lost sales: $" + String(lost_sales);
+    } else {
+        document.querySelector("#expected-dozens").innerHTML += "<br>You made enough donuts. Good job.";
+    }
+
+    // how many donuts should you have got
+    var tgt_oz_used = 0;
+    for (let i = 0; i < maxDough; i++) {
+        for (k in doughs[i]) {
+            const count = getDoughValue(i, k, "donutCount");
+            if (count != null) {
+                tgt_oz_used += donut_dough_weights[k] * count;
+            }
+        }
+    }
+
+    document.querySelector("#expected-dozens").innerHTML += "<br>Target lb used: " + String(tgt_oz_used / 16);
+    document.querySelector("#expected-dozens").innerHTML += "<br>Actual lb used: " + String(lb_of_dough);
+
+    var doz_diff = ((lb_of_dough - (tgt_oz_used / 16)) * 5.92) / 12;
+    document.querySelector("#expected-dozens").innerHTML += "<br>Doz diff: " + String(0-doz_diff);
+    document.querySelector("#expected-dozens").innerHTML += "<br>Sales diff: $" + String(0-(doz_diff*30));
 }
 
 function makeSheetHtml() {
@@ -461,6 +538,19 @@ function calcAllRows() {
     }
 }
 
+function getTotalForTheDay() {
+    var totalForTheDay = 0;
+    for (let i = 0; i < maxDough; i++) {
+        for (k in doughs[i]) {
+            const count = getDoughValue(i, k, "donutCount");
+            if (count != null) {
+                totalForTheDay += count;
+            }
+        }
+    }
+    return totalForTheDay;
+}
+
 function calcAll() {
     calcAllRows();
     
@@ -479,15 +569,7 @@ function calcAll() {
         }
     }
 
-    var totalForTheDay = 0;
-    for (let i = 0; i < maxDough; i++) {
-        for (k in doughs[i]) {
-            const count = getDoughValue(i, k, "donutCount");
-            if (count != null) {
-                totalForTheDay += count;
-            }
-        }
-    }
+    var totalForTheDay = getTotalForTheDay();
     document.querySelector("#total-for-the-day").innerHTML = `${Math.floor(totalForTheDay / 12)}`;
     if (totalForTheDay % 12 > 0) {
         document.querySelector("#total-for-the-day").innerHTML += ` + ${totalForTheDay % 12}`;
@@ -556,6 +638,7 @@ function run() {
     initDoughTotalsElems();
     // initDoughs();
     initElems();
+    initDoughScrapElems();
 
     // html
     initDoughButtons();
