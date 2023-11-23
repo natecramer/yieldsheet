@@ -2,6 +2,10 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
+body {
+    overflow: hidden;
+}
+
 #page {
     display: flex;
     flex-direction: column;
@@ -16,10 +20,9 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
 #main-sheet {
     display: grid;
     grid-template-columns: repeat(3, 33%);
-    width: 100%;
-    /* background-color: aquamarine; */
-    padding-left: 10px; /*1em;*/
-    /* border-bottom: 1px solid black; */
+    width: 90%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
 #main-sheet > div:nth-of-type(6n+1),
@@ -32,7 +35,8 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     /* background-color:; */
     border-bottom: 1px;
     border-color: black;
-    font-weight: bolder;
+    font-weight: bold;
+    font-size: .9em;
 }
 
 .screen-input {
@@ -62,7 +66,7 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
     color: black;
     text-align: center;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 1em;
     transition-duration: 0.2s;
     border: 1px solid bisque;
 }
@@ -87,12 +91,19 @@ body, h1, h2, h3, h4, h5, h6, .doughbutton {
 #totals-cont {
     display: flex;
     /* flex-basis: max-content; */
-    width: 100%;
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
     /* height: 8em; */
     height: max-content;
     justify-content: center;
     /* gap: 10px; */
     /* border: 1px solid blue; */
+}
+
+.total-cont-header {
+    font-weight: bolder;
+    font-size: .9em;
 }
 
 #totals-grid {
