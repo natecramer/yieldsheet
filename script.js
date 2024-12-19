@@ -1,5 +1,5 @@
 // glob vars
-const sheetDiv = document.querySelector("#main-sheet")
+const sheetDiv = document.querySelector("#main-sheet");
 
 var doughs = [];
 
@@ -7,6 +7,19 @@ var currentDoughIdx = 0;
 const maxDough = 3; // note: starts at 1, the index for the doughs array would be this - 1
 
 var data = {};
+
+var notesInput = document.querySelector("#notes-input");
+notesInput.addEventListener("change", onInputChange, false);
+var nameInput = document.querySelector("#name-input");
+nameInput.addEventListener("change", onInputChange, false);
+// var dateInput = document.querySelector("#date-input");
+// dateInput.addEventListener("change", onInputChange, false);
+var locationInput = document.querySelector("#location-input");
+locationInput.addEventListener("change", onInputChange, false);
+var shiftInput = document.querySelector("#shift-input");
+shiftInput.addEventListener("change", onInputChange, false);
+
+var dateText = document.querySelector("#date-text");
 
 const donuts = {
     LongJohns : {
@@ -144,6 +157,12 @@ function makeAndSaveNewData() {
     data.version = 1;
     makeBlankDoughs();
     data.doughs = doughs;
+
+    data.notes = notesInput.value;
+    data.name = nameInput.value;
+    data.location = locationInput.value;
+    data.shift = shiftInput.value;
+
     localStorage.setItem("data", JSON.stringify(data));
 }
 
@@ -158,10 +177,24 @@ function loadAndValidateData() {
     }
     data = loaded;
     doughs = loaded.doughs;
+
+    notesInput.value = loaded.notes;
+    nameInput.value = loaded.name;
+    if (nameInput.value == undefined || nameInput.value == "undefined") {
+        nameInput.value = "";
+    }
+    locationInput.value = loaded.location;
+    shiftInput.value = loaded.shift;
+    // console.log(loaded.notes);
     //console.log(`loadAndValidateData: data loaded (version ${data.version})`);
 }
 
 function saveData() {
+    data.notes = notesInput.value;
+    data.name = nameInput.value;
+    data.location = locationInput.value;
+    data.shift = shiftInput.value;
+    // console.log(notesInput.value);
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();
 }
@@ -313,6 +346,10 @@ function xupdate(inputElem) {
     // doughs[currentDoughIdx][inputElem.donutName].inputStr = inputElem.value;
     setDoughValue(currentDoughIdx, inputElem.donutName, "donutCount", total_donuts);
     setDoughValue(currentDoughIdx, inputElem.donutName, "inputStr", inputElem.value);
+
+    var now = new Date();
+    var datetime = now.toLocaleString();
+    dateText.innerHTML = datetime;
 }
 
 function makeSheetHtml() {
@@ -532,6 +569,8 @@ function setDough(idx) {
 function clearAll() {
     makeBlankDoughs();
     localStorage.removeItem("data");
+    localStorage.removeItem("notes");
+    notesInput.value = "";
     loadAndValidateData();
     setDough(0);
     updateSheetDisplay();

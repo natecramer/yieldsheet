@@ -165,3 +165,10 @@ body {
     justify-self: center;
     align-self: center;
 }
+
+#etc-cont {
+    display: grid;
+    grid-template-columns: .5fr 1fr;
+    flex-shrink: 1;
+    gap: 2px;
+}

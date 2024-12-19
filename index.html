@@ -31,7 +31,41 @@
             </div>
         </div>
         <br>
+        
+        <div id="notes-cont">
+            <!-- <label for="notes-input">Notes:</label> -->
+            <div id="etc-cont">
+                <label for="name-input">Name</label>
+                <input id="name-input" name="name-input" type="text">
+                <!-- <br> -->
+                <!-- <label for="date-input">Date</label> -->
+                <!-- <input id="date-input" name="date-input" type="date" disabled> -->
+                <label for="date-text">Date</label>
+                <div id="date-text" name="date-text">yes</div>
+                <!-- <br> -->
+                <label for="location-input">Location</label>
+                <select id="location-input" name="location-input">
+                    <option value="ferncreek">Fern Creek</option>
+                    <option value="hurstbourne">Hurstbourne Pkwy</option>
+                    <option value="jeffersonville">Jeffersonville</option>
+                    <option value="paristown">Paristown</option>
+                    <option value="springhurst">Springhurst</option>
+                    <option value="stmatthews">St. Matthews</option>
+                </select>
+                <label for="shift-input">Shift</label>
+                <select id="shift-input" name="shift-input">
+                    <option value="1st">1st shift</option>
+                    <option value="3rd">3rd shift</option>
+                </select>
+            </div>
+            <br>
+            Daily notes:
+            <br>
+            <textarea id="notes-input" name="notes-input" rows="10" cols="50"></textarea>
+        </div>
+        <br>
         <button onclick="clearAll()">Clear All</button>
+        <!-- <br> -->
     </div>
 </body>
 </html>
