@@ -166,6 +166,10 @@ body {
     align-self: center;
 }
 
+#notes-cont {
+    width: 90%;
+}
+
 #etc-cont {
     display: grid;
     grid-template-columns: .5fr 1fr;
