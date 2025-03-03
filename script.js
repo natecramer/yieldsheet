@@ -4,7 +4,7 @@ const sheetDiv = document.querySelector("#main-sheet");
 var doughs = [];
 
 var currentDoughIdx = 0;
-const maxDough = 3; // note: starts at 1, the index for the doughs array would be this - 1
+const maxDough = 5; // note: starts at 1, the index for the doughs array would be this - 1
 
 var data = {};
 
@@ -30,7 +30,7 @@ const donuts = {
         screen_hint: "8x3",
     },
     Bismarks : {
-        xname: "Bismarks",
+        xname: "Bismarcks",
         per_screen: 24,
         dozens: 2,
         plus: 0,
