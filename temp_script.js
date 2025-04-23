@@ -11,7 +11,7 @@ btn_temp_calc.addEventListener("click", calcTemp, false);
 
 function calcTemp(e) {
     var room = parseInt(mix_temp.value);
-    var mix = parseInt(mix_temp.value);
+    var mix = parseInt(room_temp.value);
     var water = (80 * 3) - (room + mix + 25);
     water_temp.value = parseInt(water);
 }
