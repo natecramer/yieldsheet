@@ -6,9 +6,9 @@ var btn_temp_calc = document.querySelector("#btn-temp-calc");
 
 room_temp.addEventListener("change", calcTemp, false);
 mix_temp.addEventListener("change", calcTemp, false);
-// room_temp.addEventListener("change", onTempInputChange, false);
 btn_temp_calc.addEventListener("click", calcTemp, false);
 
+// using a desired dough temperature of 80 degrees F and a friction factor of 25
 function calcTemp(e) {
     var room = parseInt(mix_temp.value);
     var mix = parseInt(room_temp.value);
