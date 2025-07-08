@@ -83,10 +83,11 @@ async function xget(e) {
     var url = 'https://www.formstack.com/api/v2/form/6222173/basic.json';
     var options = {
         method: 'GET',
+        mode: 'no-cors',
         headers: {
             'accept': 'application/json',
-            'authorization': 'Bearer &lt;b7305d010398e68f8f5ab1a048d703ef&gt',
-            'Access-Control-Allow-Origin': '*'
+            'authorization': 'Bearer b7305d010398e68f8f5ab1a048d703ef'/*,
+            'Access-Control-Allow-Origin': '*'*/
         }
     }
     fetch(url, options)
