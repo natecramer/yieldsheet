@@ -263,7 +263,8 @@ function convertDataToSubmissionJson(){
 async function submitToFormstack(e){
     const formId = 6222173;
     const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
-    const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
+    // const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
+    const url = `https://www.formstack.com/api/v2/form/${formId}/submission.json`;
 
     var submissionData = convertDataToSubmissionJson(); // obtains data from script.js
 
@@ -288,6 +289,7 @@ async function submitToFormstack(e){
     })
     .catch(error => {
         console.error('Error fetching data: ', error);
+        // confirm("There was an error uploading your yield sheet.");
     })
 }
 
