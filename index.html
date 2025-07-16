@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="/icon.png">
     <script src="./script.js" defer></script>
+    <script src="./submit_to_formstack.js" defer></script>
 </head>
 <body style="margin: 0;">
     <div id="page">
@@ -35,8 +36,10 @@
         <div id="notes-cont">
             <!-- <label for="notes-input">Notes:</label> -->
             <div id="etc-cont">
-                <label for="name-input">Name</label>
+                <label for="name-input">First Name</label>
                 <input id="name-input" name="name-input" type="text">
+                <label for="lastname-input">Last Name</label>
+                <input id="lastname-input" name="lastname-input" type="text">
                 <!-- <br> -->
                 <!-- <label for="date-input">Date</label> -->
                 <!-- <input id="date-input" name="date-input" type="date" disabled> -->
@@ -55,6 +58,7 @@
                 <label for="shift-input">Shift</label>
                 <select id="shift-input" name="shift-input">
                     <option value="1st">1st shift</option>
+                    <option value="3rd">2nd shift</option>
                     <option value="3rd">3rd shift</option>
                 </select>
             </div>
@@ -65,6 +69,8 @@
         </div>
         <br>
         <button onclick="clearAll()">Clear All</button>
+        <br><br>
+        <button onclick="submit()">Submit</button>
         <!-- <br> -->
     </div>
 </body>

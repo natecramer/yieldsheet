@@ -6,12 +6,14 @@ var doughs = [];
 var currentDoughIdx = 0;
 const maxDough = 5; // note: starts at 1, the index for the doughs array would be this - 1
 
-var data = {};
+var data = {}; // the "constructor" for this is makeAndSaveNewData()
 
 var notesInput = document.querySelector("#notes-input");
 notesInput.addEventListener("change", onInputChange, false);
 var nameInput = document.querySelector("#name-input");
 nameInput.addEventListener("change", onInputChange, false);
+var lastNameInput = document.querySelector("#lastname-input");
+lastNameInput.addEventListener("change", onInputChange, false);
 // var dateInput = document.querySelector("#date-input");
 // dateInput.addEventListener("change", onInputChange, false);
 var locationInput = document.querySelector("#location-input");
@@ -78,7 +80,7 @@ const donuts = {
         plus: 4,
         screen_hint: "4x4",
     },
-    Texas : {} // skipped during loops, do it manually. Just put the entry here so it shows up as a donut name
+    Texas : {}, // skipped during loops, do it manually. Just put the entry here so it shows up as a donut name
 };
 
 function initDoughs() {
@@ -160,10 +162,22 @@ function makeAndSaveNewData() {
 
     data.notes = notesInput.value;
     data.name = nameInput.value;
+    data.lastName = lastNameInput.value;
     data.location = locationInput.value;
     data.shift = shiftInput.value;
 
+    data.doughTotals = makeBlankDoughTotals();
+    data.totalForTheDay = {dozens: "", scrapAdded: 0, scrapLeftOver: 0, donuts: 0};
+
     localStorage.setItem("data", JSON.stringify(data));
+}
+
+function makeBlankDoughTotals() {
+    var result = [];
+    for (let i = 0; i < maxDough; i++) {
+        result.push({dozens: "", scrapAdded: 0, scrapLeftOver: 0, donuts:0});
+    }
+    return result;
 }
 
 function loadAndValidateData() {
@@ -183,6 +197,10 @@ function loadAndValidateData() {
     if (nameInput.value == undefined || nameInput.value == "undefined") {
         nameInput.value = "";
     }
+    lastNameInput.value = loaded.lastName;
+    if (lastNameInput.value == undefined || lastNameInput.value == "undefined") {
+        lastNameInput.value = "";
+    }
     locationInput.value = loaded.location;
     shiftInput.value = loaded.shift;
     // console.log(loaded.notes);
@@ -192,11 +210,13 @@ function loadAndValidateData() {
 function saveData() {
     data.notes = notesInput.value;
     data.name = nameInput.value;
+    data.lastName = lastNameInput.value;
     data.location = locationInput.value;
     data.shift = shiftInput.value;
     // console.log(notesInput.value);
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();
+    console.log(data);
 }
 
 var elems = {};
@@ -276,6 +296,8 @@ function xupdate(inputElem) {
     screens = "0";
     plus = "0";
     total_donuts = 0;
+
+    // str = str.replace(/\s+/g, '');
     
     // texas
     if (inputElem.donutName === "Texas") {
@@ -489,6 +511,7 @@ function calcAllRows() {
 function calcAll() {
     calcAllRows();
     
+    // calc totals for each dough
     for (let i = 0; i < maxDough; i++) {
         var total = 0;
         for (k in doughs[i]) {
@@ -498,12 +521,19 @@ function calcAll() {
             }
         }
         const div = document.querySelector(`#total-dough-${i+1}`);
-        div.innerHTML = `${Math.floor(total / 12)}`;
+        var totalString = `${Math.floor(total / 12)}`;
         if (total % 12 > 0) {
-            div.innerHTML += ` + ${total % 12}`
+            totalString += ` + ${total % 12}`
         }
+
+        div.innerHTML = totalString;
+        data.doughTotals[i].dozens = totalString;
+        // scrapAdded
+        // scrapLeftOver
+        data.doughTotals[i].donuts = total;
     }
 
+    // calc total for the day
     var totalForTheDay = 0;
     for (let i = 0; i < maxDough; i++) {
         for (k in doughs[i]) {
@@ -513,13 +543,21 @@ function calcAll() {
             }
         }
     }
-    document.querySelector("#total-for-the-day").innerHTML = `${Math.floor(totalForTheDay / 12)}`;
+
+    var totalForTheDayString = `${Math.floor(totalForTheDay / 12)}`;
+
     if (totalForTheDay % 12 > 0) {
-        document.querySelector("#total-for-the-day").innerHTML += ` + ${totalForTheDay % 12}`;
+        totalForTheDayString += ` + ${totalForTheDay % 12}`
     }
+    document.querySelector("#total-for-the-day").innerHTML = totalForTheDayString;
+
+    data.totalForTheDay.dozens = totalForTheDayString;
+    // scrap added
+    // scrap leftover
+    data.totalForTheDay.donuts = totalForTheDay;
 
     saveData();
-    // //console.log(JSON.stringify(doughs));
+    //console.log(JSON.stringify(doughs));
     updateSheetDisplay();
 }
 
@@ -567,6 +605,10 @@ function setDough(idx) {
 }
 
 function clearAll() {
+    var userChoice = confirm("Are you sure that you would like to clear all doughs?");
+    if (!userChoice) {
+        return;
+    }
     makeBlankDoughs();
     localStorage.removeItem("data");
     localStorage.removeItem("notes");
@@ -575,6 +617,12 @@ function clearAll() {
     setDough(0);
     updateSheetDisplay();
     calcAll();
+}
+
+function submit() {
+    updateSheetDisplay();
+    calcAll();
+    submitToFormstack(); // submit_to_formstack.js
 }
 
 function run() {
