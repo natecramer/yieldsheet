@@ -184,7 +184,7 @@ body {
     /* display: flex; */
     /* flex: initial; */
     display: grid;
-    grid-template-columns: 15% 15%;
+    grid-template-columns: 25% 25%;
     gap: 25%;
     justify-content: center;
     /* width: 100%;
