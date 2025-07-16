@@ -286,10 +286,11 @@ async function submitToFormstack(e){
     })
     .then (data => {
         console.log('Data recieved:', data);
+        confirm("Yield submitted. Thank you!");
     })
     .catch(error => {
         console.error('Error fetching data: ', error);
-        // confirm("There was an error uploading your yield sheet.");
+        confirm("Error: ", error);
     })
 }
 
