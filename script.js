@@ -165,6 +165,8 @@ function makeAndSaveNewData() {
     data.lastName = lastNameInput.value;
     data.location = locationInput.value;
     data.shift = shiftInput.value;
+    var now = new Date();
+    data.date = now.toLocaleString();
 
     data.doughTotals = makeBlankDoughTotals();
     data.totalForTheDay = {dozens: "", scrapAdded: 0, scrapLeftOver: 0, donuts: 0};
@@ -213,6 +215,8 @@ function saveData() {
     data.lastName = lastNameInput.value;
     data.location = locationInput.value;
     data.shift = shiftInput.value;
+    var now = new Date();
+    data.date = now.toLocaleString();
     // console.log(notesInput.value);
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();

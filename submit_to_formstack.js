@@ -1,4 +1,281 @@
-function convertDataToSubmissionJson(){
+const max_doughs = 5;
+
+function convertDataToSubmissionJson(thisDough, numDoughs){
+  xdata = data;
+
+  var xSubmissionData = {}; // return value
+
+
+  // absolutely disgusting
+  var fieldIDs = {
+    info: {
+      firstName: 185955255,
+      lastName: 185955256,
+      location: 185955257,
+      shift: 185955265,
+      date: 185955268,
+      dailyNotes: 185955350,
+    },
+    totals: {
+      doughs: [
+        {
+          dozens:         185955276,
+          scrapAdded:     185437199,
+          scrapLeftOver:  185437200,
+          donuts:         185955277,
+        },
+      ],
+      other: {
+        thisDoughNumber:  185955275,
+      },
+      totalForTheDay: {
+        doughsRan:        185955333,
+        dozens:           185955334,
+        // scrapAdded:     185437285,
+        // scrapLeftOver:  185437286,
+        donuts:         185955354,
+      },
+    },
+    doughs: [
+      {
+        LongJohns:    185955296,
+        Bismarks:     185955299,
+        Glazed:       185955302,
+        Twists:       185955307,
+        Honeymooners: 185955310,
+        Honeybuns:    185955313,
+        TigerTails:   185955316,
+        Fritters:     185955319,
+        Texas:        185955322,
+      },
+    ]
+  }
+
+  var offset_dict = {};
+  var offset_idx = 0;
+  for (const property in donuts) {
+    offset_dict[property] = offset_idx;
+    offset_idx += 3;
+  }
+
+  xdata.doughs.forEach(function(dough, dough_idx) {
+    Object.entries(dough).forEach(([key, value]) => {
+
+    });
+  });
+
+  /*for (var i = 0; i < xdata.doughs.length; i++) */
+  {
+    var i = thisDough;
+    // if (i > max_doughs) {
+    //   break;
+    // }
+    // if (xdata.doughTotals[i].dozens <= 0) {
+    //   break;
+    // }
+    
+    var num_donuts = 0;
+    var dozens = 0;
+    var dozens_plus = 0;
+    var screens = 0;
+    var screens_plus = 0;
+    for (donut_name in xdata.doughs[i]) {
+      field_id = fieldIDs.doughs[0][donut_name];
+
+      // Texas donuts only saves the Donut Count, in donuts
+      // so 4 donuts = 1 Texas.
+      if (donut_name === "Texas"){
+        num_donuts = xdata.doughs[i][donut_name].donutCount;
+        dozens = Math.floor(num_donuts / 12);
+        dozens_plus = num_donuts % 12;
+        screens = Math.floor(num_donuts/4); // Texas donuts doesn't use screens, it just uses the donut count
+      } else {
+        // all other donuts
+        // var donut = xdata.doughs[i][donut_name];
+        num_donuts = xdata.doughs[i][donut_name].donutCount;
+        screens = Math.floor(num_donuts / donuts[donut_name].per_screen);
+        screens_plus = num_donuts % donuts[donut_name].per_screen;
+        dozens = Math.floor(num_donuts / 12);
+        dozens_plus = num_donuts % 12;
+
+      }
+
+      // screens
+      if (screens_plus > 0) {
+        xSubmissionData[`field_${field_id}`] = `${screens}+${screens_plus}`;
+      } else {
+        xSubmissionData[`field_${field_id}`] = `${screens}`
+      }
+      field_id += 1;
+
+      // dozens
+      if (dozens_plus > 0) {
+        xSubmissionData[`field_${field_id}`] = `${dozens}+${dozens_plus}`;
+      } else {
+        xSubmissionData[`field_${field_id}`] = `${dozens}`;
+      }
+      field_id += 1;
+
+      // number of donuts
+      xSubmissionData[`field_${field_id}`] = `${num_donuts}`;
+      field_id += 1;
+
+      // DEBUG: field test with donut names
+      /*
+      if (screens_plus > 0) {
+        xSubmissionData[`field_${field_id}`] = `${screens}+${screens_plus} ${donut_name} screens`;
+      } else {
+        xSubmissionData[`field_${field_id}`] = `${screens} ${donut_name} screens`
+      }
+      field_id += 1;
+
+      // dozens
+      if (dozens_plus > 0) {
+        xSubmissionData[`field_${field_id}`] = `${dozens}+${dozens_plus} ${donut_name} dozens`;
+      } else {
+        xSubmissionData[`field_${field_id}`] = `${dozens} ${donut_name} dozens`;
+      }
+      field_id += 1;
+
+      // number of donuts
+      xSubmissionData[`field_${field_id}`] = `${num_donuts} ${donut_name} num_donuts`;
+      field_id += 1;
+      */
+    }
+
+    // piggyback on this for loop to set totals
+
+    field_id = fieldIDs.totals.doughs[0].dozens;
+    xSubmissionData[`field_${fieldIDs.totals.doughs[0].dozens}`] = xdata.doughTotals[i].dozens;
+    xSubmissionData[`field_${fieldIDs.totals.doughs[0].scrapAdded}`] = xdata.doughTotals[i].scrapAdded;
+    xSubmissionData[`field_${fieldIDs.totals.doughs[0].scrapLeftOver}`] = xdata.doughTotals[i].scrapLeftOver;
+    xSubmissionData[`field_${fieldIDs.totals.doughs[0].donuts}`] = xdata.doughTotals[i].donuts;
+  }
+
+  // total for the day
+  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.dozens}`] = xdata.totalForTheDay.dozens;
+  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.scrapAdded}`] = xdata.totalForTheDay.scrapAdded;
+  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.scrapLeftOver}`] = xdata.totalForTheDay.scrapLeftOver;
+  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.donuts}`] = xdata.totalForTheDay.dozens;
+
+  // dailyNotes
+  xSubmissionData[`field_${fieldIDs.info.dailyNotes}`] = xdata.notes;
+  
+
+  // firstName
+  field_id = fieldIDs.info.firstName;
+  xSubmissionData[`field_${field_id}`] = `${xdata.name}`
+  // lastName
+  xSubmissionData[`field_${fieldIDs.info.lastName}`] = `${xdata.lastName}`
+  xSubmissionData[`field_${fieldIDs.info.shift}`] = `${xdata.shift}`
+
+  // location
+  const locationStrMap = {
+    jeffersonville: "Jeffersonville",
+    stmatthews: "St. Matthews",
+    hurstbourne: "Hurstbourne Pkwy",
+    paristown: "Paristown",
+    ferncreek: "Fern Creek",
+    springhurst: "Springhurst",
+    lexington: "Lexington"
+  }
+
+  var locationString = "Unknown";
+
+  if (xdata.location in locationStrMap) {
+    locationString = locationStrMap[xdata.location];
+  }
+
+  xSubmissionData[`field_${fieldIDs.info.location}`] = locationString;
+
+  // doughs ran
+   xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.doughsRan}`] = numDoughs;
+  // this dough
+   xSubmissionData[`field_${fieldIDs.totals.other.thisDoughNumber}`] = thisDough+1;
+
+  // date
+  xSubmissionData[`field_${fieldIDs.info.date}`] = xdata.date;
+
+  console.log(xSubmissionData);
+  return xSubmissionData;
+}
+
+async function xSubmit(submissionData, thisDough, numDoughs) {
+  const formId = 6257070;
+  const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
+  const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
+  // const url = `https://www.formstack.com/api/v2/form/${formId}/submission.json`;
+  var options = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(submissionData[thisDough]),
+    }
+    fetch(url, options)
+    .then(response => {
+        if (!response.ok) {
+          error_message_title = "HTTP Error";
+          error_message_contents = `HTTP error! status: ${response.status} Response: ${response}`;
+          console.log(error_message_contents)
+            throw new Error(error_message_contents);
+        }
+        return response.json();
+    })
+    .then (data => {
+        console.log('Data recieved:', data);
+        console.log(`Successfully submitted dough ${thisDough}`);
+        if (thisDough < numDoughs-1) {
+          xSubmit(submissionData, thisDough+1, numDoughs)
+        } else {
+          console.log(`Successfully submitted ${numDoughs} doughs!`);
+          confirm(`Submitted ${numDoughs} doughs! Thank you.`);   
+        }
+    })
+    .catch(error => {
+        error_message_title = "Error fetching data";
+        error_message_contents = `Error fetching data: ${error}`;
+        console.error(error_message_contents);
+        confirm(`Error: ${error}\n\nTry refreshing the page.`, error);
+        return -1;
+    })
+}
+
+async function submitToFormstack(e){
+    
+
+    // figure out number of doughs ran
+    var num_doughs = 0;
+    for (var i = 0; i < data.doughs.length; i++) {
+      if ( i > max_doughs 
+        || data.doughTotals[i].dozens <= 0
+      ){
+        break;
+      }
+      
+      num_doughs++;
+    }
+
+    console.log(`Attempting to submit ${num_doughs} doughs`);
+
+    var error_message_title = "";
+    var error_message_contents = "";
+
+    var submissionData = [];
+    // obtains data from script.js
+    for (var i = 0; i < num_doughs; i++) {
+      submissionData.push(convertDataToSubmissionJson(i, num_doughs))
+    }
+
+    xSubmit(submissionData, 0, num_doughs);
+
+    // confirm(`Submitted ${num_doughs} doughs! Thank you.`);
+}
+
+
+function convertDataToSubmissionJson_AllDoughs(){
   xdata = data;
 
   var xSubmissionData = {}; // return value
@@ -260,7 +537,7 @@ function convertDataToSubmissionJson(){
   return xSubmissionData;
 }
 
-async function submitToFormstack(e){
+async function submitToFormstack_AllDoughs(e){
     const formId = 6222173;
     const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
     const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
@@ -362,43 +639,6 @@ async function xget(e) {
             // ,
             // 'Access-Control-Allow-Origin': '*'
         }
-    }
-    fetch(url, options)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} Response: ${response}`);
-        }
-        return response.json();
-    })
-    .then (data => {
-        console.log('Data recieved:', data);
-    })
-    .catch(error => {
-        console.error('Error fetching data: ', error);
-    })
-}
-
-
-
-async function xsubmit(e){
-    const formId = 6222173;
-    const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
-    const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
-
-    var submissionData = {
-        field_185291918: "1",
-        field_185291920: "2",
-        field_185291994: "3",
-    };
-
-    var options = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(submissionData),
     }
     fetch(url, options)
     .then(response => {
