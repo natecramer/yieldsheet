@@ -194,12 +194,15 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
    xSubmissionData[`field_${fieldIDs.totals.other.thisDoughNumber}`] = thisDough+1;
 
   // date
-  xSubmissionData[`field_${fieldIDs.info.date}`] = xdata.date;
+  xSubmissionData[`field_${fieldIDs.info.date}`] = xdata.date.slice(0, xdata.date.indexOf(","));
 
   console.log(xSubmissionData);
   return xSubmissionData;
 }
 
+// Once calling, this function submits 1 dough.
+// If submitting mutiple doughs, it will recursively call itself
+// when it recieves the HTTP response for the previous dough submitted.
 async function xSubmit(submissionData, thisDough, numDoughs) {
   const formId = 6257070;
   const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
@@ -244,34 +247,33 @@ async function xSubmit(submissionData, thisDough, numDoughs) {
 }
 
 async function submitToFormstack(e){
+
+  // figure out number of doughs ran
+  var num_doughs = 0;
+  for (var i = 0; i < data.doughs.length; i++) {
+    if ( i > max_doughs 
+      || data.doughTotals[i].dozens <= 0
+    ){
+      break;
+    }
     
+    num_doughs++;
+  }
 
-    // figure out number of doughs ran
-    var num_doughs = 0;
-    for (var i = 0; i < data.doughs.length; i++) {
-      if ( i > max_doughs 
-        || data.doughTotals[i].dozens <= 0
-      ){
-        break;
-      }
-      
-      num_doughs++;
-    }
-
+  // Confirmation dialogue
+  if (confirm(`Are you sure that you would like to submit ${num_doughs} doughs?`)) {
     console.log(`Attempting to submit ${num_doughs} doughs`);
+  } else {
+    return;
+  }
 
-    var error_message_title = "";
-    var error_message_contents = "";
+  var submissionData = [];
+  // obtains data from script.js
+  for (var i = 0; i < num_doughs; i++) {
+    submissionData.push(convertDataToSubmissionJson(i, num_doughs))
+  }
 
-    var submissionData = [];
-    // obtains data from script.js
-    for (var i = 0; i < num_doughs; i++) {
-      submissionData.push(convertDataToSubmissionJson(i, num_doughs))
-    }
-
-    xSubmit(submissionData, 0, num_doughs);
-
-    // confirm(`Submitted ${num_doughs} doughs! Thank you.`);
+  xSubmit(submissionData, 0, num_doughs);
 }
 
 
