@@ -1,3 +1,10 @@
+var isUploading = false; // if true, it will display The Overlay
+
+var uploadingOverlay = document.getElementById("uploading-overlay");
+var uploadingText = document.getElementById("uploading-text");
+var uploadingProgTextElem = document.getElementById("uploading-prog-text");
+var uploadingBarInner = document.getElementById("uploading-bar-inner");
+
 const max_doughs = 5;
 
 function convertDataToSubmissionJson(thisDough, numDoughs){
@@ -200,10 +207,21 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
   return xSubmissionData;
 }
 
+function uploadingOverlayShow() {
+  uploadingOverlay.style.display = "flex";
+}
+
+function uploadingOverlayHide() {
+  uploadingOverlay.style.display = "none";
+}
+
 // Once calling, this function submits 1 dough.
 // If submitting mutiple doughs, it will recursively call itself
 // when it recieves the HTTP response for the previous dough submitted.
 async function xSubmit(submissionData, thisDough, numDoughs) {
+
+  uploadingOverlayShow()
+
   const formId = 6257070;
   const accessToken = 'b7305d010398e68f8f5ab1a048d703ef';
   const url = `https://proxy.corsfix.com/?https://www.formstack.com/api/v2/form/${formId}/submission.json`;
@@ -223,8 +241,10 @@ async function xSubmit(submissionData, thisDough, numDoughs) {
           error_message_title = "HTTP Error";
           error_message_contents = `HTTP error! status: ${response.status} Response: ${response}`;
           console.log(error_message_contents)
+          uploadingOverlayHide();
             throw new Error(error_message_contents);
         }
+        uploadingOverlayHide();
         return response.json();
     })
     .then (data => {
@@ -234,6 +254,7 @@ async function xSubmit(submissionData, thisDough, numDoughs) {
           xSubmit(submissionData, thisDough+1, numDoughs)
         } else {
           console.log(`Successfully submitted ${numDoughs} doughs!`);
+          uploadingOverlayHide();
           confirm(`Submitted ${numDoughs} doughs! Thank you.`);   
         }
     })
@@ -242,6 +263,7 @@ async function xSubmit(submissionData, thisDough, numDoughs) {
         error_message_contents = `Error fetching data: ${error}`;
         console.error(error_message_contents);
         confirm(`Error: ${error}\n\nTry refreshing the page.`, error);
+        uploadingOverlayHide();
         return -1;
     })
 }

@@ -198,3 +198,68 @@ body {
 #btn-submit {
     background-color: limegreen;
 }
+
+#uploading-overlay {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    /* cursor: pointer; */
+    align-items: center;
+    justify-content: center;
+}
+
+#uploading-middle {
+    display: grid;
+    height: 30%;
+    /* border: 1px solid cyan; */
+    justify-content: center;
+}
+
+#uploading-text {
+    font-weight: bold;
+    font-size: 2em;
+    color: white;
+    text-shadow:    -2px -2px 0 black,
+                    2px -2px 0 black,
+                    -2px 2px 0 black,
+                    2px 2px 0 black;
+}
+
+#uploading-prog-text {
+    font-weight: bold;
+    font-size: 1.4em;
+    color: white;
+}
+
+#uploading-bar-outer {
+    width: 100%;
+    background-color: darkblue;
+    border: 1px solid white;
+    height: 30px;
+    border-radius: 5px;
+    display: none; /* hidden */
+}
+
+#uploading-bar-inner {
+    width: 1px;
+    height: 100%;
+    background-color: aqua;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    color: white;
+    display: none; /* hidden */
+}
+
+#uploading-close-btn {
+    font-weight: bold;
+    font-size: 1.34em;
+    height: 1.34em;
+}
