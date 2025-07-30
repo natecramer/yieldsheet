@@ -189,6 +189,7 @@ function loadAndValidateData() {
         loaded.version != currentDataVersion) {
             //console.log("loadAndValidateData: data not found or version was invalid, calling makeAndSaveNewData()");
             makeAndSaveNewData();
+            forceClearAll();
             return;
     }
     data = loaded;
@@ -609,10 +610,14 @@ function setDough(idx) {
 }
 
 function clearAll() {
-    var userChoice = confirm("Are you sure that you would like to clear all doughs?");
-    if (!userChoice) {
+    if (confirm("Are you sure that you would like to clear all doughs?")) {
+        forceClearAll();
+    } else {
         return;
     }
+}
+
+function forceClearAll() {
     makeBlankDoughs();
     localStorage.removeItem("data");
     localStorage.removeItem("notes");
