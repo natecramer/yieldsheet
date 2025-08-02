@@ -643,7 +643,7 @@ function submit() {
 }
 
 function run() {
-    document.getElementById("version-text").innerHTML = `v1.1.077`;
+    document.getElementById("version-text").innerHTML = `v1.1.078`;
     // data
     loadAndValidateData();
     initDoughTotalsElems();
