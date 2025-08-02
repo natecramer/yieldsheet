@@ -653,7 +653,7 @@ function submit() {
 }
 
 function run() {
-    document.getElementById("version-text").innerHTML = `v1.1.079`;
+    document.getElementById("version-text").innerHTML = `v1.1.080`;
     // html
     // initDoughButtons();
     initElems();
