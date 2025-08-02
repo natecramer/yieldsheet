@@ -644,6 +644,7 @@ function submit() {
 
 function run() {
     document.getElementById("version-text").innerHTML = `v1.1.078`;
+    initDoughButtons();
     // data
     loadAndValidateData();
     initDoughTotalsElems();
