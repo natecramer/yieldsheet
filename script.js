@@ -422,9 +422,15 @@ function makeSheetHtml() {
         sheetDiv.appendChild(newDiv)
         sheetDiv.appendChild(resultDiv)
 
+        elems[property] = {};
+
         elems[property]["inputElem"] = input;
         elems[property]["resultElem"] = resultDiv;
+        console.log(property);
+        console.log(elems[property]);
     }
+    console.log("t");
+    console.log(elems);
 }
 
 function makeTexasRowHtml() {
@@ -467,6 +473,8 @@ function makeTexasRowHtml() {
 
     sheetDiv.appendChild(newDiv);
     sheetDiv.appendChild(resultDiv);
+
+    elems["Texas"] = {};
 
     elems["Texas"]["inputElem"] = input;
     elems["Texas"]["resultElem"] = resultDiv;
@@ -576,6 +584,7 @@ function calcAll() {
 
 function updateSheetDisplay() {
     for (key in elems) {
+        console.log(elems);
         elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
     }
 }
@@ -595,6 +604,7 @@ function setDough(idx) {
     localStorage.setItem("currentDough", currentDoughIdx);
 
     let buttons = document.querySelectorAll(".doughbutton");
+    console.log(buttons);
     // for (let i = 0; i < buttons.length; i++)
     buttons.forEach((e) => {
         e.classList.remove("doughcurrent");
@@ -644,17 +654,18 @@ function submit() {
 
 function run() {
     document.getElementById("version-text").innerHTML = `v1.1.079`;
-    initDoughButtons();
-    // data
-    loadAndValidateData();
-    initDoughTotalsElems();
-    // initDoughs();
-    initElems();
-
     // html
-    initDoughButtons();
+    // initDoughButtons();
+    initElems();
     makeSheetHtml();
     makeTexasRowHtml();
+    initDoughButtons();
+    initDoughTotalsElems();
+    // data
+    loadAndValidateData();
+    // initDoughs();
+
+    
     currentDoughIdx = localStorage.getItem('currentDough');
     if (currentDoughIdx === null) {
         currentDoughIdx = 0;
