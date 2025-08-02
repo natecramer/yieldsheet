@@ -188,8 +188,8 @@ function loadAndValidateData() {
         loaded.hasOwnProperty("version") === null ||
         loaded.version != currentDataVersion) {
             //console.log("loadAndValidateData: data not found or version was invalid, calling makeAndSaveNewData()");
-            makeAndSaveNewData();
             forceClearAll();
+            makeAndSaveNewData();
             return;
     }
     data = loaded;
@@ -635,7 +635,7 @@ function submit() {
 }
 
 function run() {
-    document.getElementById("version-text").innerHTML = `v1.1.076`;
+    document.getElementById("version-text").innerHTML = `v1.1.077`;
     // data
     loadAndValidateData();
     initDoughTotalsElems();
