@@ -188,8 +188,16 @@ function loadAndValidateData() {
         loaded.hasOwnProperty("version") === null ||
         loaded.version != currentDataVersion) {
             //console.log("loadAndValidateData: data not found or version was invalid, calling makeAndSaveNewData()");
-            forceClearAll();
+            makeBlankDoughs();
             makeAndSaveNewData();
+            // forceClearAll copy/paste
+            localStorage.removeItem("data");
+            localStorage.removeItem("notes");
+            notesInput.value = "";
+            // loadAndValidateData();
+            setDough(0);
+            updateSheetDisplay();
+            calcAll();
             return;
     }
     data = loaded;
