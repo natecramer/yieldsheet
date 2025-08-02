@@ -226,10 +226,8 @@ function saveData() {
     data.shift = shiftInput.value;
     var now = new Date();
     data.date = now.toLocaleString();
-    // console.log(notesInput.value);
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();
-    console.log(data);
 }
 
 var elems = {};
@@ -426,11 +424,9 @@ function makeSheetHtml() {
 
         elems[property]["inputElem"] = input;
         elems[property]["resultElem"] = resultDiv;
-        console.log(property);
-        console.log(elems[property]);
+        // console.log(property);
+        // console.log(elems[property]);
     }
-    console.log("t");
-    console.log(elems);
 }
 
 function makeTexasRowHtml() {
@@ -584,7 +580,7 @@ function calcAll() {
 
 function updateSheetDisplay() {
     for (key in elems) {
-        console.log(elems);
+        // console.log(elems);
         elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
     }
 }
@@ -604,7 +600,7 @@ function setDough(idx) {
     localStorage.setItem("currentDough", currentDoughIdx);
 
     let buttons = document.querySelectorAll(".doughbutton");
-    console.log(buttons);
+    // console.log(buttons);
     // for (let i = 0; i < buttons.length; i++)
     buttons.forEach((e) => {
         e.classList.remove("doughcurrent");
