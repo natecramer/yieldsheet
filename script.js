@@ -1,7 +1,16 @@
+const appVersion = `v1.1.081`
+
 // glob vars
 const sheetDiv = document.querySelector("#main-sheet");
 
 var doughs = [];
+
+// for use in makeSingleBlankDough
+// for use in doughs[idx][donut_name]
+var blankDonut = {
+    inputStr: "0",
+    donutCount: 0
+};
 
 var currentDoughIdx = 0;
 const maxDough = 5; // note: starts at 1, the index for the doughs array would be this - 1
@@ -73,6 +82,13 @@ const donuts = {
         plus: 0,
         screen_hint: "8x3",
     },
+    PretzelTwists : {
+        xname: "Pretzel Twists",
+        per_screen: 16,
+        dozens: 1,
+        plus: 4,
+        screen_hint: "4x4",
+    },
     Fritters : {
         xname: "Fritters",
         per_screen: 16,
@@ -99,9 +115,7 @@ function initDoughs() {
 function makeSingleBlankDough(idx) {
     doughs[idx] = {};
     for (property in donuts) {
-        doughs[idx][property] = {
-            inputStr: "0", 
-            donutCount: 0};
+        doughs[idx][property] = blankDonut;
     }
 }
 function makeBlankDoughs() {
@@ -190,7 +204,7 @@ function loadAndValidateData() {
             //console.log("loadAndValidateData: data not found or version was invalid, calling makeAndSaveNewData()");
             makeBlankDoughs();
             makeAndSaveNewData();
-            // forceClearAll copy/paste
+            // *** forceClearAll copy/paste
             localStorage.removeItem("data");
             localStorage.removeItem("notes");
             notesInput.value = "";
@@ -380,9 +394,11 @@ function xupdate(inputElem) {
     setDoughValue(currentDoughIdx, inputElem.donutName, "donutCount", total_donuts);
     setDoughValue(currentDoughIdx, inputElem.donutName, "inputStr", inputElem.value);
 
-    var now = new Date();
-    var datetime = now.toLocaleString();
-    dateText.innerHTML = datetime;
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const year = now.getFullYear();
+    dateText.innerHTML = `${month}/${day}/${year}`;
 }
 
 function makeSheetHtml() {
@@ -581,7 +597,18 @@ function calcAll() {
 function updateSheetDisplay() {
     for (key in elems) {
         // console.log(elems);
-        elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
+        if (elems[key].hasOwnProperty("inputElem")) {
+            // console.log("HAS");
+            if (key in doughs[currentDoughIdx]) {
+                // console.log(`KEY IN DICT: ${key}`);
+            } else {
+                // console.log(`NOT KEY IN DICT: ${key}`);
+                doughs[currentDoughIdx][key] = blankDonut;
+            }
+            elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
+        } else {
+            console.log("DOES NOT HAVE");
+        }
     }
 }
 
@@ -631,6 +658,10 @@ function clearAll() {
     }
 }
 
+// WARN
+// if you change something in here please also change at:
+// *** forceClearAll copy/paste
+// very bad code. This was a temporary fix. Thank you.
 function forceClearAll() {
     makeBlankDoughs();
     localStorage.removeItem("data");
@@ -640,6 +671,7 @@ function forceClearAll() {
     setDough(0);
     updateSheetDisplay();
     calcAll();
+    window.location.reload();
 }
 
 function submit() {
@@ -649,7 +681,7 @@ function submit() {
 }
 
 function run() {
-    document.getElementById("version-text").innerHTML = `v1.1.080`;
+    document.getElementById("version-text").innerHTML = appVersion;
     // html
     // initDoughButtons();
     initElems();
