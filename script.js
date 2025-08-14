@@ -1,4 +1,4 @@
-const appVersion = `v1.1.081`
+const appVersion = `v1.1.082`
 
 // glob vars
 const sheetDiv = document.querySelector("#main-sheet");
