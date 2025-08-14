@@ -53,6 +53,7 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
         Honeybuns:    185955313,
         TigerTails:   185955316,
         Fritters:     185955319,
+        PretzelTwists: 186699837,
         Texas:        185955322,
       },
     ]
