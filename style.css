@@ -1,9 +1,12 @@
-body, h1, h2, h3, h4, h5, h6, .doughbutton {
+/* Copyright © 2024 Nate Cramer natecramer@gmail.com */
+
+body, a, h1, h2, h3, h4, h5, h6, .doughbutton, .menu-button {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
-    overflow: hidden;
+    /* overflow: hidden; */
+    background-color: bisque;
 }
 
 #page {
@@ -47,9 +50,12 @@ body {
     display: flex;
     flex: initial;
     justify-content: center;
-    width: 100%;
+    width: 85%;
     /* background-color: aqua; */
     padding-bottom: 10px; /*1em;*/
+    /* position: absolute; */
+    top: 5px;
+    left: 2em;
 }
 
 #doughbuttons {
@@ -57,7 +63,7 @@ body {
     flex: 1;
     justify-content: center;
     width: 80%;
-    gap: 10px; /*1em;*/
+    gap: 2px; /*1em;*/
 }
 
 .doughbutton {
@@ -66,9 +72,13 @@ body {
     color: black;
     text-align: center;
     font-weight: bold;
-    font-size: 1em;
+    /* font-size: 1em; */
+    font-size: clamp(.9rem, 3vw, 2rem);
     transition-duration: 0.2s;
     border: 1px solid bisque;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 .doughbutton.doughcurrent {
@@ -107,10 +117,13 @@ body {
 }
 
 #totals-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    display: flex;
+    /* grid-template-columns: 1.5fr; */
     /* background-color: aqua; */
     /* border: 1px solid red; */
+    /* gap: 0.5em; */
+    border: 1px solid sienna;
+    border-left: 0px;
 }
 
 .total-cont-left {
@@ -152,6 +165,42 @@ body {
 .total-cont-left, .total-cont-right {
     /* border: 1px solid black;
     background-color: cyan; */
+}
+
+.total-cont-main {
+    /* border: 1px solid sienna; */
+    border-left: 1px solid sienna;
+    /* border-left: 1px solid sienna; */
+}
+
+.total-cont-head {
+    /* border: 1px solid cyan; */
+    padding: 0.2em;
+    /* justify-content: center;
+    align-items: center; */
+    /* font-size: 0.9em; */
+    text-wrap: nowrap;
+
+    text-align: center;
+    cursor: default;
+    border-bottom: 1px solid sienna;
+    
+}
+.total-cont-head.doughcurrent {
+    background-color: khaki;
+}
+
+.total-cont-body {
+    display: flex;
+    /* border: 1px solid green; */
+    padding: 0.2em;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* border: 1px solid sienna; */
+}
+.total-cont-body.doughcurrent {
+    background-color: khaki;
 }
 
 .total-day-cont {
@@ -272,4 +321,116 @@ body {
     z-index: 5;
     font-size: 0.5em;
     color:burlywood;
+}
+
+#scrap-cont-main {
+    /* border: 1px solid cyan; */
+    /* width: 100%; */
+    display: grid;
+    grid-template-columns: 30% 20% 32%;
+    flex-shrink: 1;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+    /* text-wrap: nowrap; */
+}
+
+#extra-dozens-from-scrap {
+    /* border: 1px solid red; */
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    /* text-wrap: nowrap; */
+}
+
+#menu-button-main-cont {
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    height: 2em;
+    width: 2em;
+}
+
+#menu-button-main {
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    height: 2em;
+    width: 2em;
+
+    background-color: bisque;
+    border: 0px;
+    background-image: url("./icon-menu.png");
+    /* width: 100%; */
+    /* height: 100%; */
+    background-size: 100% 100%;
+}
+
+#menu-button-main:hover {
+    background-color: red;
+}
+
+#menu-main {
+    display: none; /* sets to flex when activated (menu.js) */
+    flex: 1 1 auto;
+    background-color: antiquewhite;
+    position: fixed;
+    z-index: 6;
+    left: 0;
+    top: 0;
+    height: auto;
+    width: 50%;
+    gap: 1rem;
+    /* justify-content: center; */
+    align-items: center;
+    /* padding-top: .1rem;
+    padding-left: .1rem; */
+    padding-right: .5rem;
+    padding-bottom: .5rem;
+}
+
+#menu-fade-overlay {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.menu-button {
+    display: flex;
+    width: 100%;
+    height: 2em;
+    border: 0;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 2em;
+    background-color: lightcoral;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+}
+.menu-button:hover {
+    background-color: yellow;
+}
+
+.menu-button-cont {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid blue; */
+}
+
+#help-main {
+    /* display: flex; */
+    width: 80%;
+    padding-top: 2em;
 }

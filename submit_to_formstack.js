@@ -1,3 +1,5 @@
+// Copyright © 2024 Nate Cramer natecramer@gmail.com
+
 var isUploading = false; // if true, it will display The Overlay
 
 var uploadingOverlay = document.getElementById("uploading-overlay");
@@ -27,8 +29,8 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
       doughs: [
         {
           dozens:         185955276,
-          scrapAdded:     185437199,
-          scrapLeftOver:  185437200,
+          scrapAdded:     187407232,
+          scrapLeftOver:  187407235,
           donuts:         185955277,
         },
       ],
@@ -88,6 +90,10 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
     var screens = 0;
     var screens_plus = 0;
     for (donut_name in xdata.doughs[i]) {
+      if (!(donut_name in donuts)) {
+        console.log(`ERROR: ${donut_name} found in xdata.doughs . doughs should ONLY be used for donuts. If you need to attach addition data to a dough, please use doughTotals. Please cleanse the data.`);
+        continue;
+      }
       field_id = fieldIDs.doughs[0][donut_name];
 
       // Texas donuts only saves the Donut Count, in donuts
@@ -162,8 +168,6 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
 
   // total for the day
   xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.dozens}`] = xdata.totalForTheDay.dozens;
-  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.scrapAdded}`] = xdata.totalForTheDay.scrapAdded;
-  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.scrapLeftOver}`] = xdata.totalForTheDay.scrapLeftOver;
   xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.donuts}`] = xdata.totalForTheDay.dozens;
 
   // dailyNotes
@@ -269,7 +273,7 @@ async function xSubmit(submissionData, thisDough, numDoughs) {
     })
 }
 
-async function submitToFormstack(e){
+async function submitToFormstack(){
 
   // figure out number of doughs ran
   var num_doughs = 0;

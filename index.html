@@ -1,3 +1,5 @@
+<!-- Copyright © 2024 Nate Cramer natecramer@gmail.com -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,32 +10,56 @@
     <link rel="icon" href="/icon.png">
     <script src="./script.js" defer></script>
     <script src="./submit_to_formstack.js" defer></script>
+    <script src="./menu.js" defer></script>
 </head>
 <body style="margin: 0;">
     <div id="version-text"></div>
+
+    <div id="menu"></div>
+
     <div id="page">
         <br>
         <div id="doughbuttonscont">
             <div id="doughbuttons"></div>
         </div>
+        
         <div id="main-sheet">
                 <div class="sheet-header">PRODUCT</div>
                 <div class="sheet-header"># OF SCREENS</div>
                 <div class="sheet-header"># OF DOZENS</div>
         </div>
+
         <br>
+
+        <div id="scrap-cont-main">
+            <label>Scrap Added</label>
+            <input id="scrap-added-input" name="scrap-added-input" type="number">
+            <label id="scrap-added-extra-text">pounds</label>
+            <label>Scrap Left Over</label>
+            <input id="scrap-leftover-input" name="scrap-leftover-input" type="number">
+            pounds
+        </div>
+        <label id="extra-dozens-from-scrap">Extra dozens from scrap:</label>
+        <br>
+        Total Dozens:<br>
         <div id="totals-cont">
             <div id="totals-grid">
-                <div class="total-cont-header">
+                <!-- <div>
+                    <div class="total-cont-head">TOTAL</div>
+                    <div class="total-cont-body">Dozens</div>
+                </div> -->
+                <!-- <div class="total-cont-header">
                     TOTALS
                 </div>
                 <div class="total-cont-header">
                     # OF DOZENS
-                </div>
+                </div> -->
             </div>
-            <!-- <div id="totals-grid-2"> -->
-
-            <!-- </div> -->
+        </div>
+        
+        <div>
+            <div class="total-day-cont">Total for the day:</div>
+            <div id="total-for-the-day">0</div>
         </div>
         <br>
         
@@ -47,7 +73,7 @@
                 <!-- <br> -->
                 <!-- <label for="date-input">Date</label> -->
                 <!-- <input id="date-input" name="date-input" type="date" disabled> -->
-                <label for="date-text">Date</label>
+                <label>Date</label>
                 <div id="date-text" name="date-text">yes</div>
                 <!-- <br> -->
                 <label for="location-input">Location</label>
@@ -77,7 +103,7 @@
             <br>
             Daily notes:
             <br>
-            <textarea id="notes-input" name="notes-input" rows="8" cols="40"></textarea>
+            <textarea id="notes-input" name="notes-input" rows="4" cols="40"></textarea>
         </div>
 
         <div id="bottom-buttons-cont">
@@ -92,7 +118,8 @@
                 <div id="uploading-bar-outer">
                     <div id="uploading-bar-inner"></div>
                 </div>
-                <button id="uploading-close-btn">Close</button>
+                <!-- <button id="uploading-close-btn">Close</button> -->
+                Please wait...
             </div>
         </div>
         <!-- <br> -->

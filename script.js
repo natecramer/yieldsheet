@@ -1,10 +1,28 @@
-const appVersion = `v1.1.082`
+// Copyright © 2024 Nate Cramer natecramer@gmail.com
+
+const appVersion = `v1.1.084`
 
 // glob vars
 const sheetDiv = document.querySelector("#main-sheet");
 
 var doughs = [];
 
+function poundsOfScrapToDonuts(pounds) {
+    return Math.ceil(pounds * 6.4);
+}
+
+function scrapToExtraDonuts(scrapAddedInPounds, scrapLeftOverInPounds) {
+    return  poundsOfScrapToDonuts(scrapLeftOverInPounds) - poundsOfScrapToDonuts(scrapAddedInPounds);
+}
+
+function donutsToDozensString(donuts) {
+    var result = `${Math.floor(donuts / 12)}`;
+    if (donuts % 12 > 0) {
+        result += ` + ${donuts % 12}`
+    }
+
+    return result;
+}
 // for use in makeSingleBlankDough
 // for use in doughs[idx][donut_name]
 var blankDonut = {
@@ -31,6 +49,14 @@ var shiftInput = document.querySelector("#shift-input");
 shiftInput.addEventListener("change", onInputChange, false);
 
 var dateText = document.querySelector("#date-text");
+
+var scrapAddedInput = document.querySelector("#scrap-added-input");
+scrapAddedInput.addEventListener("change", onInputChange, false);
+var scrapAddedExtraText = document.querySelector("#scrap-added-extra-text");
+var scrapLeftOverInput = document.querySelector("#scrap-leftover-input");
+scrapLeftOverInput.addEventListener("change", onInputChange, false);
+
+var extraDozensFromScrapElem = document.querySelector("#extra-dozens-from-scrap");
 
 const donuts = {
     LongJohns : {
@@ -117,6 +143,8 @@ function makeSingleBlankDough(idx) {
     for (property in donuts) {
         doughs[idx][property] = blankDonut;
     }
+    doughs[idx].scrapAdded = 0;
+    doughs[idx].scrapLeftOver = 0;
 }
 function makeBlankDoughs() {
     doughs = [];
@@ -155,7 +183,6 @@ function setDoughValue(doughIdx, donutName, field, value) {
         makeSingleBlankDough(doughIdx);
     }
     if (!donutName in doughs[doughIdx]) {
-        //console.log(`setDoughValue: tried to write to a donutName that doesn't exist: ${donutName}`);
     }
     if (!field in doughs[doughIdx][donutName]) {
         //console.log(`setDoughValue: tried to write to a field that doesn't exist: ${field}`);
@@ -191,7 +218,7 @@ function makeAndSaveNewData() {
 function makeBlankDoughTotals() {
     var result = [];
     for (let i = 0; i < maxDough; i++) {
-        result.push({dozens: "", scrapAdded: 0, scrapLeftOver: 0, donuts:0});
+        result.push({dozens: "", scrapAdded: 0, scrapLeftOver: 0, donuts: 0, extraDonutsFromScrap: 0});
     }
     return result;
 }
@@ -228,8 +255,13 @@ function loadAndValidateData() {
     }
     locationInput.value = loaded.location;
     shiftInput.value = loaded.shift;
+
+    scrapAddedInput.value = loaded.doughTotals[currentDoughIdx].scrapAdded;
+    scrapLeftOverInput.value = loaded.doughTotals[currentDoughIdx].scrapLeftOver;
+
     // console.log(loaded.notes);
     //console.log(`loadAndValidateData: data loaded (version ${data.version})`);
+    console.log(data);
 }
 
 function saveData() {
@@ -238,8 +270,12 @@ function saveData() {
     data.lastName = lastNameInput.value;
     data.location = locationInput.value;
     data.shift = shiftInput.value;
+    // data.doughs[currentDoughIdx].scrapAdded = scrapAddedInput.value;
+    // data.doughs[currentDoughIdx].scrapLeftOver = scrapLeftOverInput.value;
     var now = new Date();
     data.date = now.toLocaleString();
+    data.doughTotals[currentDoughIdx].scrapAdded = scrapAddedInput.value;
+    data.doughTotals[currentDoughIdx].scrapLeftOver = scrapLeftOverInput.value;
     localStorage.setItem("data", JSON.stringify(data));
     loadAndValidateData();
 }
@@ -268,6 +304,45 @@ function initDoughButtons() {
 }
 
 function initDoughTotalsElems() {
+    let mainDiv = document.querySelector("#totals-grid");
+    for (let i = 0; i < maxDough; i++) {
+        let contDiv = document.createElement("div");
+        contDiv.setAttribute("class", "total-cont-main");
+        let doughContDiv = document.createElement("div");
+        doughContDiv.setAttribute("class", "total-cont-head");
+        // doughContDiv.setAttribute("class", "doughbutton");
+        doughContDiv.innerHTML = `Dough ${i+1}`;
+        
+        let valueContDiv = document.createElement("div");
+        valueContDiv.setAttribute("class", "total-cont-body");
+        let innerDiv = document.createElement("div");
+        innerDiv.setAttribute("id", `total-dough-${i+1}`);
+        innerDiv.innerHTML = "0";
+
+        if (i % 2 === 0) {
+            // valueContDiv.setAttribute("class", "total-cont-right alt");
+            // doughContDiv.setAttribute("class", "total-cont-left alt");
+        }
+
+        doughContDiv.doughNumber = i;
+        doughContDiv.addEventListener("click", onDoughButtonClicked);
+        valueContDiv.doughNumber = i;
+        valueContDiv.addEventListener("click", onDoughButtonClicked);
+        innerDiv.doughNumber = i;
+        innerDiv.addEventListener("click", onDoughButtonClicked);
+
+        valueContDiv.appendChild(innerDiv);
+        contDiv.appendChild(doughContDiv);
+        contDiv.appendChild(valueContDiv);
+
+        mainDiv.appendChild(contDiv);
+        
+        // mainDiv.appendChild(valueContDiv);
+    }
+}
+
+/*
+function initDoughTotalsElemsOld() {
     let gridDiv = document.querySelector("#totals-grid");
     for (let i = 0; i < maxDough; i++) {
         let leftContDiv = document.createElement("div");
@@ -311,6 +386,7 @@ function initDoughTotalsElems() {
     rightContDiv.appendChild(innerDiv);
     gridDiv.appendChild(rightContDiv);
 }
+*/
 
 function onInputChange(e) {
     calcAll();
@@ -322,7 +398,7 @@ function xupdate(inputElem) {
     plus = "0";
     total_donuts = 0;
 
-    // str = str.replace(/\s+/g, '');
+    str = str.replace(/\s+/g, '');
     
     // texas
     if (inputElem.donutName === "Texas") {
@@ -399,6 +475,9 @@ function xupdate(inputElem) {
     const day = now.getDate();
     const year = now.getFullYear();
     dateText.innerHTML = `${month}/${day}/${year}`;
+
+    doughs[currentDoughIdx].scrapAdded = scrapAddedInput.value;
+    doughs[currentDoughIdx].scrapLeftOver = scrapLeftOverInput.value;
 }
 
 function makeSheetHtml() {
@@ -584,10 +663,24 @@ function calcAll() {
     }
     document.querySelector("#total-for-the-day").innerHTML = totalForTheDayString;
 
+    scrapAddedExtraText.innerHTML = "pounds";
+    if (data.doughTotals[currentDoughIdx].scrapAdded != '') {
+        // scrapAddedExtraText.innerHTML += ` (+${poundsOfScrapToDozens(data.doughTotals[currentDoughIdx].scrapAdded)} dozen)`;
+    }
+
     data.totalForTheDay.dozens = totalForTheDayString;
     // scrap added
     // scrap leftover
     data.totalForTheDay.donuts = totalForTheDay;
+
+    data.doughTotals[currentDoughIdx].scrapAdded = scrapAddedInput.value;
+    data.doughTotals[currentDoughIdx].scrapLeftOver = scrapLeftOverInput.value;
+
+    if (extraDozensFromScrapElem != null) {
+        extraDozensFromScrapElem.innerHTML = "Extra dozens from scrap: " + donutsToDozensString(scrapToExtraDonuts(data.doughTotals[currentDoughIdx].scrapAdded, data.doughTotals[currentDoughIdx].scrapLeftOver));
+    }
+
+    
 
     saveData();
     //console.log(JSON.stringify(doughs));
@@ -607,9 +700,13 @@ function updateSheetDisplay() {
             }
             elems[key].inputElem.value = doughs[currentDoughIdx][key].inputStr;
         } else {
-            console.log("DOES NOT HAVE");
+            console.log(`ERROR: updateSheetDisplay: elems DOES NOT HAVE ${key}`);
         }
     }
+
+    // scrap
+    scrapAddedInput.value = data.doughTotals[currentDoughIdx].scrapAdded;
+    scrapLeftOverInput.value = data.doughTotals[currentDoughIdx].scrapLeftOver;
 }
 
 function onDoughButtonClicked() {
@@ -627,24 +724,34 @@ function setDough(idx) {
     localStorage.setItem("currentDough", currentDoughIdx);
 
     let buttons = document.querySelectorAll(".doughbutton");
-    // console.log(buttons);
-    // for (let i = 0; i < buttons.length; i++)
     buttons.forEach((e) => {
         e.classList.remove("doughcurrent");
     });
     buttons[idx].classList.add("doughcurrent");
 
-    let totalLeftConts = document.querySelectorAll(".total-cont-left");
-    let totalRightConts = document.querySelectorAll(".total-cont-right");
-    totalLeftConts.forEach((e) => {
-        e.classList.remove("doughcurrent")
+    let heads = document.querySelectorAll(".total-cont-head");
+    heads.forEach((e) => {
+        e.classList.remove("doughcurrent");
     });
-    totalRightConts.forEach((e) => {
-        e.classList.remove("doughcurrent")
-    });
+    heads[idx].classList.add("doughcurrent");
 
-    totalLeftConts[idx].classList.add("doughcurrent");
-    totalRightConts[idx].classList.add("doughcurrent");
+    let bodies = document.querySelectorAll(".total-cont-body");
+    bodies.forEach((e) => {
+        e.classList.remove("doughcurrent");
+    });
+    bodies[idx].classList.add("doughcurrent");
+
+    // let totalLeftConts = document.querySelectorAll(".total-cont-left");
+    // let totalRightConts = document.querySelectorAll(".total-cont-right");
+    // totalLeftConts.forEach((e) => {
+    //     e.classList.remove("doughcurrent")
+    // });
+    // totalRightConts.forEach((e) => {
+    //     e.classList.remove("doughcurrent")
+    // });
+
+    // totalLeftConts[idx].classList.add("doughcurrent");
+    // totalRightConts[idx].classList.add("doughcurrent");
 
     updateSheetDisplay();
     calcAll();
@@ -667,6 +774,8 @@ function forceClearAll() {
     localStorage.removeItem("data");
     localStorage.removeItem("notes");
     notesInput.value = "";
+    scrapAddedInput.value = "";
+    scrapLeftOverInput.value = "";
     loadAndValidateData();
     setDough(0);
     updateSheetDisplay();
