@@ -1,6 +1,6 @@
 // Copyright © 2024 Nate Cramer natecramer@gmail.com
 
-const appVersion = `v1.1.085`
+const appVersion = `v1.1.0856`
 
 // glob vars
 const sheetDiv = document.querySelector("#main-sheet");

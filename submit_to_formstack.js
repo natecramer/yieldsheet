@@ -169,7 +169,7 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
 
   // total for the day
   xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.dozens}`] = xdata.totalForTheDay.dozens;
-  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.donuts}`] = xdata.totalForTheDay.dozens;
+  xSubmissionData[`field_${fieldIDs.totals.totalForTheDay.donuts}`] = xdata.totalForTheDay.donuts;
 
   // dailyNotes
   xSubmissionData[`field_${fieldIDs.info.dailyNotes}`] = xdata.notes;
