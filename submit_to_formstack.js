@@ -103,6 +103,7 @@ function convertDataToSubmissionJson(thisDough, numDoughs){
         dozens = Math.floor(num_donuts / 12);
         dozens_plus = num_donuts % 12;
         screens = Math.floor(num_donuts/4); // Texas donuts doesn't use screens, it just uses the donut count
+        screens_plus = 0;
       } else {
         // all other donuts
         // var donut = xdata.doughs[i][donut_name];
